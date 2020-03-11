@@ -1,4 +1,4 @@
-package obama.prism.engine;
+package obama.prism.engine.graphics;
 
 import java.awt.*;
 import java.awt.image.*;

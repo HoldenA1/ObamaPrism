@@ -1,4 +1,4 @@
-package obama.prism.engine;
+package obama.prism.engine.graphics;
 
 import javax.swing.JFrame;
 

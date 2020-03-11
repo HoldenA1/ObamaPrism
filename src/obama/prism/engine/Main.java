@@ -1,5 +1,7 @@
 package obama.prism.engine;
 
+import obama.prism.engine.graphics.*;
+
 public class Main {
 	
 	private static final int WIDTH = 640;
@@ -26,7 +28,7 @@ public class Main {
 		while (true) {
 			screen.render();
 			
-			// An attempt not turn your computer into a toaster
+			// An attempt to not turn your computer into a toaster
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
