@@ -17,6 +17,8 @@ public class Screen extends Canvas {
 	private Graphics graphics;
 	private BufferedImage bufferedImage;
 	
+	public Render render;
+	
 	private long lastTime;
 	
 	public Screen(int width, int height) {
@@ -32,11 +34,32 @@ public class Screen extends Canvas {
 		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		pixels = ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData();
 		
+		render = new Render(width, height);
+		
 		// For frame rate counter
 		lastTime = System.nanoTime();
 	}
 	
+	public void update() {
+		render.clear();
+	}
+	
 	public void render() {
+		Point mouse = getMousePosition();
+		
+		int x1 = 0;
+		int y1 = 0;
+		if (mouse != null) {
+			x1 = (int) mouse.getX();
+			y1 = (int) mouse.getY();
+		}
+		
+		setPixels(render.plotLine(0, 0, x1, y1));
+		
+		renderGraphics(bufferedImage);
+	}
+	
+	private void renderGraphics(BufferedImage image) {
 		BufferStrategy bs = getBufferStrategy();
 		if (bs == null) {
 			createBufferStrategy(3);
@@ -49,7 +72,7 @@ public class Screen extends Canvas {
 		graphics.setColor(Color.BLACK);
 		graphics.fillRect(0, 0, width, height);
 		// Draw the frame
-		graphics.drawImage(bufferedImage, 0, 0, width, height, null);
+		graphics.drawImage(image, 0, 0, width, height, null);
 		// Draw the frame rate
 		graphics.setColor(Color.YELLOW);
 		int frameRate = calculateFrameRate();
@@ -65,6 +88,12 @@ public class Screen extends Canvas {
 		double updateDelta = now - lastTime;
 		lastTime = now;
 		return (int) (1000000000.0 / updateDelta);
+	}
+	
+	public void clear() {
+		for (int i = 0; i < pixels.length; i++) {
+			pixels[i] = 0;
+		}
 	}
 	
 	public void setPixels(int[] pixels) {
