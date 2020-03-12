@@ -1,26 +1,16 @@
 package obama.prism.engine.graphics;
 
-public class Render {
+public class LineDrawer {
 	
 	private int[] pixels;
 	private int width;
 	
-	public Render(int width, int height) {
+	public LineDrawer(int[] pixels, int width) {
+		this.pixels = pixels;
 		this.width = width;
-		
-		pixels = new int[width * height];
-		for (int i = 0; i < pixels.length; i++) {
-			pixels[i] = 0;
-		}
 	}
 	
-	public void clear() {
-		for (int i = 0; i < pixels.length; i++) {
-			pixels[i] = 0;
-		}
-	}
-	
-	public int[] plotLine(int x0, int y0, int x1, int y1) {
+	public void plotLine(int x0, int y0, int x1, int y1) {
 		if (Math.abs(y1 - y0) < Math.abs(x1 - x0)) {
 			if (x0 > x1) {
 				plotLineLow(x1, y1, x0, y0);
@@ -34,7 +24,6 @@ public class Render {
 				plotLineHigh(x0, y0, x1, y1);
 			}
 		}
-		return pixels;
 	}
 	
 	private void plotLineLow(int x0, int y0, int x1, int y1) {
@@ -86,4 +75,5 @@ public class Render {
 	private void plot(int x, int y) {
 		pixels[x + y * width] = 0xff00ff;
 	}
+
 }

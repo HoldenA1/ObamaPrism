@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.*;
 
 /**
- * Screen will contain all of the code having to do with rendering pixels on the screen
+ * Screen contains everything to do with basic rendering
  * @author holden
  */
 public class Screen extends Canvas {
@@ -17,7 +17,7 @@ public class Screen extends Canvas {
 	private Graphics graphics;
 	private BufferedImage bufferedImage;
 	
-	public Render render;
+	private LineDrawer line;
 	
 	private long lastTime;
 	
@@ -34,32 +34,20 @@ public class Screen extends Canvas {
 		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		pixels = ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData();
 		
-		render = new Render(width, height);
+		line = new LineDrawer(pixels, width);
 		
 		// For frame rate counter
 		lastTime = System.nanoTime();
 	}
 	
+	public void drawLine(int x0, int y0, int x1, int y1) {
+		line.plotLine(x0, y0, x1, y1);
+	}
+	
 	public void update() {
-		render.clear();
 	}
 	
 	public void render() {
-		Point mouse = getMousePosition();
-		
-		int x1 = 0;
-		int y1 = 0;
-		if (mouse != null) {
-			x1 = (int) mouse.getX();
-			y1 = (int) mouse.getY();
-		}
-		
-		setPixels(render.plotLine(0, 0, x1, y1));
-		
-		renderGraphics(bufferedImage);
-	}
-	
-	private void renderGraphics(BufferedImage image) {
 		BufferStrategy bs = getBufferStrategy();
 		if (bs == null) {
 			createBufferStrategy(3);
@@ -68,11 +56,8 @@ public class Screen extends Canvas {
 		
 		// Create graphics context
 		graphics = bs.getDrawGraphics();
-		// Clears screen
-		graphics.setColor(Color.BLACK);
-		graphics.fillRect(0, 0, width, height);
 		// Draw the frame
-		graphics.drawImage(image, 0, 0, width, height, null);
+		graphics.drawImage(bufferedImage, 0, 0, width, height, null);
 		// Draw the frame rate
 		graphics.setColor(Color.YELLOW);
 		int frameRate = calculateFrameRate();
@@ -90,12 +75,21 @@ public class Screen extends Canvas {
 		return (int) (1000000000.0 / updateDelta);
 	}
 	
+	/**
+	 * Clears the screen to get rid of the last frame
+	 */
 	public void clear() {
 		for (int i = 0; i < pixels.length; i++) {
 			pixels[i] = 0;
 		}
 	}
 	
+	/**
+	 * This sets the pixels on the screen, however all low
+	 * level rendering should be handled in helper classes
+	 * like LineDrawer and implemented here.
+	 */
+	@Deprecated
 	public void setPixels(int[] pixels) {
 		for (int i = 0; i < pixels.length; i++) {
 			this.pixels[i] = pixels[i];

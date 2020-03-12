@@ -1,5 +1,7 @@
 package obama.prism.engine;
 
+import java.awt.Point;
+
 import obama.prism.engine.graphics.*;
 
 public class Main {
@@ -38,10 +40,25 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * Update is where you draw things. It is run before the pixels are rendered onto the screen.
+	 */
 	private static void update() {
-		screen.update();
+		Point mouse = screen.getMousePosition();
+		
+		int x1 = 0;
+		int y1 = 0;
+		if (mouse != null) {
+			x1 = (int) mouse.getX();
+			y1 = (int) mouse.getY();
+		}
+		
+		screen.drawLine(0, 0, x1, y1);
 	}
 	
+	/**
+	 * This is where the pixels are actually drawn on the screen
+	 */
 	private static void render() {
 		screen.render();
 	}
