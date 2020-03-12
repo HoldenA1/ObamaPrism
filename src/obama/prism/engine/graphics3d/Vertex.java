@@ -1,4 +1,4 @@
-package obama.prism.engine.graphics;
+package obama.prism.engine.graphics3d;
 
 public class Vertex {
 	

@@ -17,7 +17,7 @@ public class Screen extends Canvas {
 	private Graphics graphics;
 	private BufferedImage bufferedImage;
 	
-	private LineDrawer line;
+	private LineDrawer lineDrawer;
 	
 	private long lastTime;
 	
@@ -34,14 +34,14 @@ public class Screen extends Canvas {
 		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		pixels = ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData();
 		
-		line = new LineDrawer(pixels, width);
+		lineDrawer = new LineDrawer(pixels, width, height);
 		
 		// For frame rate counter
 		lastTime = System.nanoTime();
 	}
 	
 	public void drawLine(int x0, int y0, int x1, int y1) {
-		line.plotLine(x0, y0, x1, y1);
+		lineDrawer.plotLine(x0, y0, x1, y1);
 	}
 	
 	public void render() {
@@ -82,12 +82,22 @@ public class Screen extends Canvas {
 	}
 	
 	/**
-	 * This sets the pixels on the screen, however all low
-	 * level rendering should be handled in helper classes
-	 * like LineDrawer and implemented here.
+	 * This sets the all pixels on the screen to the
+	 * array you pass it
 	 */
-	@Deprecated
 	public void setPixels(int[] pixels) {
+		for (int i = 0; i < pixels.length; i++) {
+			this.pixels[i] = pixels[i];
+		}
+	}
+	
+	/**
+	 * Sets the color of a single pixel
+	 * @param x
+	 * @param y
+	 * @param color should be in hex
+	 */
+	public void setPixel(int x, int y, int color) {
 		for (int i = 0; i < pixels.length; i++) {
 			this.pixels[i] = pixels[i];
 		}

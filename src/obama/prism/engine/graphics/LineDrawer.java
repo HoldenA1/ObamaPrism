@@ -3,11 +3,12 @@ package obama.prism.engine.graphics;
 public class LineDrawer {
 	
 	private int[] pixels;
-	private int width;
+	private int width, height;
 	
-	public LineDrawer(int[] pixels, int width) {
+	public LineDrawer(int[] pixels, int width, int height) {
 		this.pixels = pixels;
 		this.width = width;
+		this.height = height;
 	}
 	
 	public void plotLine(int x0, int y0, int x1, int y1) {
@@ -73,7 +74,9 @@ public class LineDrawer {
 	}
 	
 	private void plot(int x, int y) {
-		pixels[x + y * width] = 0xff00ff;
+		if (x >= 0 && y >= 0 && x < width && y < height) {
+			pixels[x + y * width] = 0xff00ff;
+		}
 	}
 
 }
