@@ -44,9 +44,6 @@ public class Screen extends Canvas {
 		line.plotLine(x0, y0, x1, y1);
 	}
 	
-	public void update() {
-	}
-	
 	public void render() {
 		BufferStrategy bs = getBufferStrategy();
 		if (bs == null) {
