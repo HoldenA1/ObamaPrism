@@ -1,5 +1,9 @@
 package obama.prism.engine.graphics3d;
 
+/**
+ * Vertex is a data structure that stores a 3D point
+ * @author holden
+ */
 public class Vertex {
 	
 	private float x, y, z;

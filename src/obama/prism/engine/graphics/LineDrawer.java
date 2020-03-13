@@ -1,5 +1,9 @@
 package obama.prism.engine.graphics;
 
+/**
+ * LineDrawer handles the drawing of lines on the Screen
+ * @author holden
+ */
 public class LineDrawer {
 	
 	private int[] pixels;
@@ -11,7 +15,7 @@ public class LineDrawer {
 		this.height = height;
 	}
 	
-	public void plotLine(int x0, int y0, int x1, int y1) {
+	public void draw(int x0, int y0, int x1, int y1) {
 		if (Math.abs(y1 - y0) < Math.abs(x1 - x0)) {
 			if (x0 > x1) {
 				plotLineLow(x1, y1, x0, y0);

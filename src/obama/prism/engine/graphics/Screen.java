@@ -3,6 +3,8 @@ package obama.prism.engine.graphics;
 import java.awt.*;
 import java.awt.image.*;
 
+import obama.prism.engine.graphics3d.Triangle;
+
 /**
  * Screen contains everything to do with basic rendering
  * @author holden
@@ -41,7 +43,11 @@ public class Screen extends Canvas {
 	}
 	
 	public void drawLine(int x0, int y0, int x1, int y1) {
-		lineDrawer.plotLine(x0, y0, x1, y1);
+		lineDrawer.draw(x0, y0, x1, y1);
+	}
+	
+	public void drawTriangle(Triangle triangle) {
+		triangle.draw(this);
 	}
 	
 	public void render() {

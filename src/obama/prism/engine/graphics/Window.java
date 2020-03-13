@@ -1,18 +1,25 @@
 package obama.prism.engine.graphics;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 
+/**
+ * Window is a simple JFrame wrapper that makes JFrame easier to use
+ * @author holden
+ */
 public class Window extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 
 	public Window(String name, int width, int height) {
 		super(name);
-		setSize(width, height);
-		setLocationRelativeTo(null);
+		getContentPane().setPreferredSize(new Dimension(width, height));
 		setVisible(true);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pack();
+		setLocationRelativeTo(null);
 	}
 	
 	/**

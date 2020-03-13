@@ -15,7 +15,7 @@ public class Player {
 		URL url = Player.class.getResource(song);
 		
 		if (url == null) {
-			System.out.println("Sorry, the sound clip could not be found");
+			System.err.println("Sorry, the sound clip could not be found");
 		} else {
 			try {
 				AudioInputStream audio = AudioSystem.getAudioInputStream(url);
@@ -24,7 +24,7 @@ public class Player {
 				clip.start();
 	            clip.loop(Clip.LOOP_CONTINUOUSLY);
 			} catch (Exception e) {
-				System.out.println("Sorry, there was an error processing the sound clip");
+				System.err.println("Sorry, there was an error processing the sound clip");
 			}
 		}
 	}
