@@ -35,13 +35,13 @@ public class Engine {
 		screen = new Screen(WIDTH, HEIGHT);
 		frame.add(screen);
 		
-//		transform = new Transformer(numVecs, WIDTH, HEIGHT);
-//		
-//		transform.add(0, 0, 125, 0); //num, x, y, z
-//		transform.add(1, -100, -60, -100);
-//		transform.add(2, -100, -60, 100);
-//		transform.add(3, 100, -60, 100);
-//		transform.add(4, 100, -60, -100);
+		transform = new Transformer(numVecs, WIDTH, HEIGHT);
+		
+		transform.add(0, 0, 125, 0); //num, x, y, z
+		transform.add(1, -100, -60, -100);
+		transform.add(2, -100, -60, 100);
+		transform.add(3, 100, -60, 100);
+		transform.add(4, 100, -60, -100);
 		
 		t1 = new Triangle(
 			new Vertex(WIDTH * 0.25f, HEIGHT * 0.75f, 0),
@@ -82,13 +82,13 @@ public class Engine {
 	 * Update is where you draw things. It is run before the pixels are rendered onto the screen.
 	 */
 	private void update() {
-//		theta += velocity / 100.0;
-//		transform.setMatrix(theta);
-//		transform.transformVecs();
-//		transform.paintVectors(screen);
+		theta += velocity / 100.0;
+		transform.setMatrix(theta);
+		transform.transformVecs();
+		transform.paintVectors(screen);
 		
-		t1.draw(screen);
-		t2.draw(screen);
+//		t1.draw(screen);
+//		t2.draw(screen);
 	}
 	
 	/**
