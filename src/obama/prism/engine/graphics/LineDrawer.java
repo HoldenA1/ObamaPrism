@@ -1,7 +1,10 @@
 package obama.prism.engine.graphics;
 
 /**
- * LineDrawer handles the drawing of lines on the Screen
+ * LineDrawer handles the drawing of lines on the Screen.
+ * This is an implementation of Bresenham's line drawing
+ * algorithm.
+ * <a href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm">link</a>
  * @author holden
  */
 public class LineDrawer {
