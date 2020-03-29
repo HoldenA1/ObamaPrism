@@ -1,5 +1,11 @@
 package obama.prism.engine.graphics;
 
+import java.awt.Color;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * LineDrawer handles the drawing of lines on the Screen.
  * This is an implementation of Bresenham's line drawing
@@ -9,32 +15,44 @@ package obama.prism.engine.graphics;
  */
 public class LineDrawer {
 	
-	private int[] pixels;
-	private int width, height;
-	
-	public LineDrawer(int[] pixels, int width, int height) {
-		this.pixels = pixels;
-		this.width = width;
-		this.height = height;
-	}
-	
-	public void draw(int x0, int y0, int x1, int y1) {
+	public static Point[] getLine(int x0, int y0, int x1, int y1) {
+		List<Point> line = new ArrayList<Point>();
+		
 		if (Math.abs(y1 - y0) < Math.abs(x1 - x0)) {
 			if (x0 > x1) {
-				plotLineLow(x1, y1, x0, y0);
+				plotLineLow(x1, y1, x0, y0, line);
+				Collections.reverse(line);
 			} else {
-				plotLineLow(x0, y0, x1, y1);
+				plotLineLow(x0, y0, x1, y1, line);
 			}
 		} else {
 			if (y0 > y1) {
-				plotLineHigh(x1, y1, x0, y0);
+				plotLineHigh(x1, y1, x0, y0, line);
+				Collections.reverse(line);
 			} else {
-				plotLineHigh(x0, y0, x1, y1);
+				plotLineHigh(x0, y0, x1, y1, line);
 			}
 		}
+		
+		return line.toArray(new Point[line.size()]);
 	}
 	
-	private void plotLineLow(int x0, int y0, int x1, int y1) {
+	public static Color[] interpolateColors(Point[] line, Color color0, Color color1) {
+		Color[] colors = new Color[line.length];
+		
+		for (int i = 0; i < line.length; i++) {
+			double ratio = (double)(i) / line.length;
+			double inverseRatio = 1.0 - ratio;
+			int r = (int) (ratio * color1.getRed() + inverseRatio * color0.getRed());
+			int g = (int) (ratio * color1.getGreen() + inverseRatio * color0.getGreen());
+			int b = (int) (ratio * color1.getBlue() + inverseRatio * color0.getBlue());
+			colors[i] = new Color(r, g, b);
+		}
+		
+		return colors;
+	}
+	
+	private static void plotLineLow(int x0, int y0, int x1, int y1, List<Point> line) {
 		int dx = x1 - x0;
 		int dy = y1 - y0;
 		int yi = 1;
@@ -48,7 +66,7 @@ public class LineDrawer {
 		int y = y0;
 		
 		for (int x = x0; x <= x1; x++) {
-			plot(x, y);
+			line.add(new Point(x, y));
 			if (D > 0) {
 				y = y + yi;
 				D = D - 2*dx;
@@ -57,7 +75,7 @@ public class LineDrawer {
 		}
 	}
 	
-	private void plotLineHigh(int x0, int y0, int x1, int y1) {
+	private static void plotLineHigh(int x0, int y0, int x1, int y1, List<Point> line) {
 		int dx = x1 - x0;
 		int dy = y1 - y0;
 		int xi = 1;
@@ -71,18 +89,12 @@ public class LineDrawer {
 		int x = x0;
 		
 		for (int y = y0; y <= y1; y++) {
-			plot(x, y);
+			line.add(new Point(x, y));
 			if (D > 0) {
 				x = x + xi;
 				D = D - 2*dy;
 			}
 			D = D + 2*dx;
-		}
-	}
-	
-	private void plot(int x, int y) {
-		if (x >= 0 && y >= 0 && x < width && y < height) {
-			pixels[x + y * width] = 0xff00ff;
 		}
 	}
 

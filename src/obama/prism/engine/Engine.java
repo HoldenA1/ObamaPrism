@@ -1,10 +1,12 @@
 package obama.prism.engine;
 
+import java.awt.Color;
+
 import obama.prism.engine.graphics.Screen;
 import obama.prism.engine.graphics.Window;
 import obama.prism.engine.graphics3d.Transformer;
 import obama.prism.engine.graphics3d.Triangle;
-import obama.prism.engine.graphics3d.Vertex;
+import obama.prism.engine.graphics3d.Vec;
 import obama.prism.engine.sound.Player;
 
 /**
@@ -44,15 +46,17 @@ public class Engine {
 //		transform.add(4, 100, -60, -100);
 		
 		t1 = new Triangle(
-			new Vertex(WIDTH * 0.25f, HEIGHT * 0.75f, 0),
-			new Vertex(WIDTH * 0.75f, HEIGHT * 0.75f, 0),
-			new Vertex(WIDTH * 0.75f, HEIGHT * 0.25f, 0)
+			new Vec(WIDTH * 0.25f, HEIGHT * 0.75f, 0),
+			new Vec(WIDTH * 0.75f, HEIGHT * 0.75f, 0),
+			new Vec(WIDTH * 0.75f, HEIGHT * 0.25f, 0),
+			Color.cyan
 		);
 		
 		t2 = new Triangle(
-			new Vertex(WIDTH * 0.25f, HEIGHT * 0.75f, 0),
-			new Vertex(WIDTH * 0.75f, HEIGHT * 0.25f, 0),
-			new Vertex(WIDTH * 0.25f, HEIGHT * 0.25f, 0)
+			new Vec(WIDTH * 0.25f, HEIGHT * 0.75f, 0),
+			new Vec(WIDTH * 0.75f, HEIGHT * 0.25f, 0),
+			new Vec(WIDTH * 0.25f, HEIGHT * 0.25f, 0),
+			Color.magenta
 		);
 		
 		if (musicOn) {
@@ -87,8 +91,8 @@ public class Engine {
 //		transform.transformVecs();
 //		transform.paintVectors(screen);
 		
-		t1.draw(screen);
-		t2.draw(screen);
+		screen.fillTriangle(t1);
+		screen.fillTriangle(t2);
 	}
 	
 	/**

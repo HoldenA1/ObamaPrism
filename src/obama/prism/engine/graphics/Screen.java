@@ -19,8 +19,6 @@ public class Screen extends Canvas {
 	private Graphics graphics;
 	private BufferedImage bufferedImage;
 	
-	private LineDrawer lineDrawer;
-	
 	private long lastTime;
 	
 	public Screen(int width, int height) {
@@ -36,18 +34,40 @@ public class Screen extends Canvas {
 		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		pixels = ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData();
 		
-		lineDrawer = new LineDrawer(pixels, width, height);
-		
 		// For frame rate counter
 		lastTime = System.nanoTime();
 	}
 	
-	public void drawLine(int x0, int y0, int x1, int y1) {
-		lineDrawer.draw(x0, y0, x1, y1);
+	public void drawLine(int x0, int y0, int x1, int y1, Color color) {
+		Point[] line = LineDrawer.getLine(x0, y0, x1, y1);
+		
+		for (Point p: line) {
+			pixels[p.x + p.y * width] = color.getRGB();
+		}
+	}
+	
+	/**
+	 * Uses linear interpolation to color the line
+	 * @param color0 is the color of the first point
+	 * @param color1 is the color of the second point
+	 */
+	public void drawLine(int x0, int y0, int x1, int y1, Color color0, Color color1) {
+		Point[] line = LineDrawer.getLine(x0, y0, x1, y1);
+		
+		Color[] colors = LineDrawer.interpolateColors(line, color0, color1);
+		
+		for (int i = 0; i < line.length; i++) {
+			Point p = line[i];
+			pixels[p.x + p.y * width] = colors[i].getRGB();
+		}
 	}
 	
 	public void drawTriangle(Triangle triangle) {
 		triangle.draw(this);
+	}
+	
+	public void fillTriangle(Triangle triangle) {
+		triangle.fill(this);
 	}
 	
 	public void render() {
@@ -104,9 +124,7 @@ public class Screen extends Canvas {
 	 * @param color should be in hex
 	 */
 	public void setPixel(int x, int y, int color) {
-		for (int i = 0; i < pixels.length; i++) {
-			this.pixels[i] = pixels[i];
-		}
+		pixels[x + y * width] = color;
 	}
 
 }

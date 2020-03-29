@@ -51,18 +51,18 @@ public class Transformer {
 	}
 
 	public void paintVectors (Screen page) {
-		for (int i = 0; i < numVectors; i++) {
-			//center
-			page.drawLine(width / 2, height / 2, 
-			width / 2 + outputs[i][0], height / 2 - outputs[i][1]);
-
-			//tip
-			page.drawLine(width / 2 + outputs[0][0], height / 2 - outputs[0][1], 
-			width / 2 + outputs[i][0], height / 2 - outputs[i][1]);
-
-			//base
-			page.drawLine(width / 2 + outputs[i][0], height / 2 - outputs[i][1],
-			width / 2 + outputs[(i+1)%numVectors][0], height / 2 - outputs[(i+1)%numVectors][1]);
-		} 
+//		for (int i = 0; i < numVectors; i++) {
+//			//center
+//			page.drawLine(width / 2, height / 2, 
+//			width / 2 + outputs[i][0], height / 2 - outputs[i][1]);
+//
+//			//tip
+//			page.drawLine(width / 2 + outputs[0][0], height / 2 - outputs[0][1], 
+//			width / 2 + outputs[i][0], height / 2 - outputs[i][1]);
+//
+//			//base
+//			page.drawLine(width / 2 + outputs[i][0], height / 2 - outputs[i][1],
+//			width / 2 + outputs[(i+1)%numVectors][0], height / 2 - outputs[(i+1)%numVectors][1]);
+//		} 
 	}
 }
