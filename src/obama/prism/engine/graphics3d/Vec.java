@@ -51,12 +51,6 @@ public class Vec {
 			);
 	}
 	
-	public static void swap(Vec v1, Vec v2) {
-		Vec temp = v1;
-		v1 = v2;
-		v2 = temp;
-	}
-	
 	@Override
 	public String toString() {
 		return "(" + x + ", " + y + ", " + z + ")";

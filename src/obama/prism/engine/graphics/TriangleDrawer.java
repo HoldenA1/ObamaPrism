@@ -1,27 +1,19 @@
-package obama.prism.engine.graphics3d;
+package obama.prism.engine.graphics;
 
 import java.awt.Color;
 import java.awt.Point;
 import obama.prism.engine.graphics.Screen;
+import obama.prism.engine.graphics3d.Vec;
 
-public class Triangle {
+public class TriangleDrawer {
 	
-	private Vec v0, v1, v2;
-	private Color color;
+	private Screen screen;
 	
-	public Triangle(Vec v0, Vec v1, Vec v2, Color triangleColor) {
-		this.v0 = v0;
-		this.v1 = v1;
-		this.v2 = v2;
-		
-		color = triangleColor;
+	public TriangleDrawer(Screen screen) {
+		this.screen = screen;
 	}
 	
-	public Triangle(Vec v0, Vec v1, Vec v2) {
-		this(v0, v1, v2, Color.magenta);
-	}
-	
-	public void draw(Screen screen) {
+	public void draw(Vec v0, Vec v1, Vec v2, Color color) {
 		Point p0 = new Point((int)v0.x, (int)v0.y);
 		Point p1 = new Point((int)v1.x, (int)v1.y);
 		Point p2 = new Point((int)v2.x, (int)v2.y);
@@ -31,7 +23,7 @@ public class Triangle {
 		screen.drawLine(p2.x, p2.y, p0.x, p0.y, color);
 	}
 	
-	public void fill(Screen screen) {
+	public void fill(Vec v0, Vec v1, Vec v2, Color color) {
 		// Sort vertices
 		if (v1.y < v0.y) swap(v0, v1);
 		if (v2.y < v1.y) swap(v1, v2);
@@ -41,11 +33,11 @@ public class Triangle {
 		if (v0.y == v1.y) {
 			// Flat top triangle
 			if (v1.x < v0.x) swap(v0, v1);
-			drawFlatTopTriangle(v0, v1, v2, screen);
+			drawFlatTopTriangle(v0, v1, v2, color);
 		} else if (v1.y == v2.y) {
 			// Flat bottom triangle
 			if (v2.x < v1.x) swap(v1, v2);
-			drawFlatBottomTriangle(v0, v1, v2, screen);
+			drawFlatBottomTriangle(v0, v1, v2, color);
 		} else {
 			// General triangle
 			// Find splitting Vec
@@ -56,17 +48,17 @@ public class Triangle {
 			
 			if (v1.x < vSplit.x) {
 				// Major right
-				drawFlatBottomTriangle(v0, v1, vSplit, screen);
-				drawFlatTopTriangle(v1, vSplit, v2, screen);
+				drawFlatBottomTriangle(v0, v1, vSplit, color);
+				drawFlatTopTriangle(v1, vSplit, v2, color);
 			} else {
 				// Major left
-				drawFlatBottomTriangle(v0, vSplit, v1, screen);
-				drawFlatTopTriangle(vSplit, v1, v2, screen);
+				drawFlatBottomTriangle(v0, vSplit, v1, color);
+				drawFlatTopTriangle(vSplit, v1, v2, color);
 			}
 		}
 	}
 	
-	private void drawFlatTopTriangle(Vec v0, Vec v1, Vec v2, Screen screen) {
+	private void drawFlatTopTriangle(Vec v0, Vec v1, Vec v2, Color color) {
 		// Calculate slopes in screen space
 		float m0 = (v2.x - v0.x) / (v2.y - v0.y);
 		float m1 = (v2.x - v1.x) / (v2.y - v1.y);
@@ -90,7 +82,7 @@ public class Triangle {
 		}
 	}
 	
-	private void drawFlatBottomTriangle(Vec v0, Vec v1, Vec v2, Screen screen) {
+	private void drawFlatBottomTriangle(Vec v0, Vec v1, Vec v2, Color color) {
 		// Calculate slopes in screen space
 		float m0 = (v1.x - v0.x) / (v1.y - v0.y);
 		float m1 = (v2.x - v0.x) / (v2.y - v0.y);
@@ -114,36 +106,16 @@ public class Triangle {
 		}
 	}
 	
-	private void swap(Vec v1, Vec v2) {
-		float tempX = v1.x;
-		float tempY = v1.y;
-		float tempZ = v1.z;
-		v1.x = v2.x;
-		v1.y = v2.y;
-		v1.z = v2.z;
-		v2.x = tempX;
-		v2.y = tempY;
-		v2.z = tempZ;
-	}
-	
-	/**
-	 * @param vecNum starts from 0
-	 * @param v
-	 */
-	public void setVec(int vecNum, Vec v) {
-		switch(vecNum) {
-		case 0:
-			v0 = v;
-			break;
-		case 1:
-			v1 = v;
-			break;
-		case 2:
-			v2 = v;
-			break;
-		default:
-			System.err.println("Input a valid vector number");
-		}
+	private void swap(Vec v0, Vec v1) {
+		float tempX = v0.x;
+		float tempY = v0.y;
+		float tempZ = v0.z;
+		v0.x = v1.x;
+		v0.y = v1.y;
+		v0.z = v1.z;
+		v1.x = tempX;
+		v1.y = tempY;
+		v1.z = tempZ;
 	}
 
 }

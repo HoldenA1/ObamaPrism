@@ -15,7 +15,37 @@ import java.util.List;
  */
 public class LineDrawer {
 	
-	public static Point[] getLine(int x0, int y0, int x1, int y1) {
+	private Screen screen;
+	
+	public LineDrawer(Screen screen) {
+		this.screen = screen;
+	}
+	
+	public void drawLine(int x0, int y0, int x1, int y1, Color color) {
+		Point[] line = getLine(x0, y0, x1, y1);
+		
+		for (Point p: line) {
+			screen.setPixel(p.x, p.y, color.getRGB());
+		}
+	}
+	
+	/**
+	 * Uses linear interpolation to color the line
+	 * @param color0 is the color of the first point
+	 * @param color1 is the color of the second point
+	 */
+	public void drawLine(int x0, int y0, int x1, int y1, Color color0, Color color1) {
+		Point[] line = getLine(x0, y0, x1, y1);
+		
+		Color[] colors = interpolateColors(line, color0, color1);
+		
+		for (int i = 0; i < line.length; i++) {
+			Point p = line[i];
+			screen.setPixel(p.x, p.y, colors[i].getRGB());
+		}
+	}
+	
+	public Point[] getLine(int x0, int y0, int x1, int y1) {
 		List<Point> line = new ArrayList<Point>();
 		
 		if (Math.abs(y1 - y0) < Math.abs(x1 - x0)) {
@@ -37,7 +67,7 @@ public class LineDrawer {
 		return line.toArray(new Point[line.size()]);
 	}
 	
-	public static Color[] interpolateColors(Point[] line, Color color0, Color color1) {
+	public Color[] interpolateColors(Point[] line, Color color0, Color color1) {
 		Color[] colors = new Color[line.length];
 		
 		for (int i = 0; i < line.length; i++) {
@@ -52,7 +82,7 @@ public class LineDrawer {
 		return colors;
 	}
 	
-	private static void plotLineLow(int x0, int y0, int x1, int y1, List<Point> line) {
+	private void plotLineLow(int x0, int y0, int x1, int y1, List<Point> line) {
 		int dx = x1 - x0;
 		int dy = y1 - y0;
 		int yi = 1;
@@ -75,7 +105,7 @@ public class LineDrawer {
 		}
 	}
 	
-	private static void plotLineHigh(int x0, int y0, int x1, int y1, List<Point> line) {
+	private void plotLineHigh(int x0, int y0, int x1, int y1, List<Point> line) {
 		int dx = x1 - x0;
 		int dy = y1 - y0;
 		int xi = 1;
