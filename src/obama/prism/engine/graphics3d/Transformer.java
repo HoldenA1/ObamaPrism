@@ -25,12 +25,12 @@ public class Transformer {
 	}
 
 	public void setMatrix (double theta) {
-		matrix[0][0] = Math.cos(theta);
+		matrix[0][0] = 1;
 		matrix[1][0] = 0;
 		matrix[0][1] = 0;
-		matrix[1][1] = 1;
-		matrix[0][2] = Math.sin(theta);
-		matrix[1][2] = 0;
+		matrix[1][1] = Math.cos(theta);
+		matrix[0][2] = 0;
+		matrix[1][2] = Math.sin(theta);
 	}
 	
 	public void transformVecs() {
@@ -51,18 +51,22 @@ public class Transformer {
 	}
 
 	public void paintVectors (Screen page) {
-//		for (int i = 0; i < numVectors; i++) {
-//			//center
-//			page.drawLine(width / 2, height / 2, 
-//			width / 2 + outputs[i][0], height / 2 - outputs[i][1]);
-//
-//			//tip
-//			page.drawLine(width / 2 + outputs[0][0], height / 2 - outputs[0][1], 
-//			width / 2 + outputs[i][0], height / 2 - outputs[i][1]);
-//
-//			//base
-//			page.drawLine(width / 2 + outputs[i][0], height / 2 - outputs[i][1],
-//			width / 2 + outputs[(i+1)%numVectors][0], height / 2 - outputs[(i+1)%numVectors][1]);
-//		} 
+		for (int i = 0; i < numVectors; i++) {
+			//center
+			page.drawLine(width / 2, height / 2, 
+			width / 2 + outputs[i][0], height / 2 - outputs[i][1]);
+
+			//tip
+			page.drawLine(width / 2 + outputs[0][0], height / 2 - outputs[0][1], 
+			width / 2 + outputs[i][0], height / 2 - outputs[i][1]);
+
+			//base
+			if (i + 1 < numVectors)
+	            page.drawLine(width / 2 + outputs[i][0], height / 2 - outputs[i][1],
+	            width / 2 + outputs[i+1][0], height / 2 - outputs[i+1][1]);
+            else
+                page.drawLine(width / 2 + outputs[i][0], height / 2 - outputs[i][1],
+                width / 2 + outputs[1][0], height / 2 - outputs[1][1]);
+		} 
 	}
 }
