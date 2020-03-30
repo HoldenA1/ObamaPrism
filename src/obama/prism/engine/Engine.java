@@ -2,9 +2,9 @@ package obama.prism.engine;
 
 import obama.prism.engine.graphics.Screen;
 import obama.prism.engine.graphics.Window;
+import obama.prism.engine.graphics3d.Model;
 import obama.prism.engine.graphics3d.Transformer;
-import obama.prism.engine.graphics3d.Triangle;
-import obama.prism.engine.graphics3d.Vertex;
+import obama.prism.engine.graphics3d.Vec;
 import obama.prism.engine.sound.Player;
 
 /**
@@ -28,32 +28,31 @@ public class Engine {
 	
 	private boolean musicOn = false;
 	
-	Triangle t1, t2;
+	private Model quad;
 	
 	public Engine() {
 		frame = new Window(TITLE, WIDTH, HEIGHT);
 		screen = new Screen(WIDTH, HEIGHT);
 		frame.add(screen);
 		
-		transform = new Transformer(numVecs, WIDTH, HEIGHT);
+// 		transform = new Transformer(numVecs, WIDTH, HEIGHT);
 		
-		transform.add(0, 0, 125, 0); //num, x, y, z
-		transform.add(1, -100, -60, -100);
-		transform.add(2, -100, -60, 100);
-		transform.add(3, 100, -60, 100);
-		transform.add(4, 100, -60, -100);
+// 		transform.add(0, 0, 125, 0); //num, x, y, z
+// 		transform.add(1, -100, -60, -100);
+// 		transform.add(2, -100, -60, 100);
+// 		transform.add(3, 100, -60, 100);
+// 		transform.add(4, 100, -60, -100);
 		
-		t1 = new Triangle(
-			new Vertex(WIDTH * 0.25f, HEIGHT * 0.75f, 0),
-			new Vertex(WIDTH * 0.75f, HEIGHT * 0.75f, 0),
-			new Vertex(WIDTH * 0.75f, HEIGHT * 0.25f, 0)
-		);
+		Vec[] vertices = {
+				new Vec(WIDTH * 0.25f, HEIGHT * 0.25f, 0),
+				new Vec(WIDTH * 0.25f, HEIGHT * 0.75f, 0),
+				new Vec(WIDTH * 0.75f, HEIGHT * 0.25f, 0),
+				new Vec(WIDTH * 0.75f, HEIGHT * 0.75f, 0)
+		};
 		
-		t2 = new Triangle(
-			new Vertex(WIDTH * 0.25f, HEIGHT * 0.75f, 0),
-			new Vertex(WIDTH * 0.75f, HEIGHT * 0.25f, 0),
-			new Vertex(WIDTH * 0.25f, HEIGHT * 0.25f, 0)
-		);
+		int[] indexBuffer = { 0, 1, 2, 2, 1, 3 };
+		
+		quad = new Model(vertices, indexBuffer);
 		
 		if (musicOn) {
 			player = new Player();
@@ -82,13 +81,12 @@ public class Engine {
 	 * Update is where you draw things. It is run before the pixels are rendered onto the screen.
 	 */
 	private void update() {
-		theta += velocity / 100.0;
-		transform.setMatrix(theta);
-		transform.transformVecs();
-		transform.paintVectors(screen);
-		
-//		t1.draw(screen);
-//		t2.draw(screen);
+// 		theta += velocity / 100.0;
+// 		transform.setMatrix(theta);
+// 		transform.transformVecs();
+// 		transform.paintVectors(screen);
+
+		screen.drawModel(quad);
 	}
 	
 	/**

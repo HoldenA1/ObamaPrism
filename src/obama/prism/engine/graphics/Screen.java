@@ -3,7 +3,8 @@ package obama.prism.engine.graphics;
 import java.awt.*;
 import java.awt.image.*;
 
-import obama.prism.engine.graphics3d.Triangle;
+import obama.prism.engine.graphics3d.Model;
+import obama.prism.engine.graphics3d.Vec;
 
 /**
  * Screen contains everything to do with basic rendering
@@ -20,6 +21,7 @@ public class Screen extends Canvas {
 	private BufferedImage bufferedImage;
 	
 	private LineDrawer lineDrawer;
+	private TriangleDrawer triangleDrawer;
 	
 	private long lastTime;
 	
@@ -36,18 +38,45 @@ public class Screen extends Canvas {
 		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		pixels = ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData();
 		
-		lineDrawer = new LineDrawer(pixels, width, height);
+		lineDrawer = new LineDrawer(this);
+		triangleDrawer = new TriangleDrawer(this);
 		
 		// For frame rate counter
 		lastTime = System.nanoTime();
 	}
 	
-	public void drawLine(int x0, int y0, int x1, int y1) {
-		lineDrawer.draw(x0, y0, x1, y1);
+	public void drawLine(int x0, int y0, int x1, int y1, Color color) {
+		lineDrawer.drawLine(x0, y0, x1, y1, color);
 	}
 	
-	public void drawTriangle(Triangle triangle) {
-		triangle.draw(this);
+	/**
+	 * @param color0 is the color of the first point
+	 * @param color1 is the color of the second point
+	 */
+	public void drawLine(int x0, int y0, int x1, int y1, Color color0, Color color1) {
+		lineDrawer.drawLine(x0, y0, x1, y1, color0, color1);
+	}
+	
+	public void drawTriangle(Vec v0, Vec v1, Vec v2, Color color) {
+		triangleDrawer.draw(v0, v1, v2, color);
+	}
+	
+	public void fillTriangle(Vec v0, Vec v1, Vec v2, Color color) {
+		triangleDrawer.fill(v0, v1, v2, color);
+	}
+	
+	public void drawModel(Model model) {
+		Vec[] vertices = model.getVertices();
+		int[] indexBuffer = model.getIndexBuffer();
+		
+		for (int triangle = 0; triangle < indexBuffer.length / 3; triangle++) {
+			triangleDrawer.fill(
+					vertices[indexBuffer[triangle*3]],
+					vertices[indexBuffer[triangle*3 + 1]],
+					vertices[indexBuffer[triangle*3 + 2]],
+					Color.magenta
+			);
+		}
 	}
 	
 	public void render() {
@@ -104,9 +133,7 @@ public class Screen extends Canvas {
 	 * @param color should be in hex
 	 */
 	public void setPixel(int x, int y, int color) {
-		for (int i = 0; i < pixels.length; i++) {
-			this.pixels[i] = pixels[i];
-		}
+		pixels[x + y * width] = color;
 	}
 
 }

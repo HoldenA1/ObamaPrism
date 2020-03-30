@@ -11,6 +11,7 @@ public class Transformer {
 
 	public Transformer (int n, int w, int h) {
 		matrix = new double[2][3];
+		
 		inputs = new int[n][3];
 		outputs = new int[n][2];
 		numVectors = n;
