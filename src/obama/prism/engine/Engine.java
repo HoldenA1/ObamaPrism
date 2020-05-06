@@ -3,8 +3,7 @@ package obama.prism.engine;
 import obama.prism.engine.graphics.Screen;
 import obama.prism.engine.graphics.Window;
 import obama.prism.engine.graphics3d.Model;
-import obama.prism.engine.graphics3d.Transformer;
-import obama.prism.engine.graphics3d.Vec;
+import obama.prism.engine.graphics3d.Vec3d;
 import obama.prism.engine.sound.Player;
 
 /**
@@ -21,38 +20,40 @@ public class Engine {
 	private Screen screen;
 	private Player player;
 	
-	private Transformer transform;
-	private int velocity = 2;
-	private int numVecs = 5;
-	private double theta = 0;
-	
 	private boolean musicOn = false;
 	
-	private Model quad;
+	private Model cube;
 	
 	public Engine() {
 		frame = new Window(TITLE, WIDTH, HEIGHT);
 		screen = new Screen(WIDTH, HEIGHT);
 		frame.add(screen);
 		
-// 		transform = new Transformer(numVecs, WIDTH, HEIGHT);
-		
-// 		transform.add(0, 0, 125, 0); //num, x, y, z
-// 		transform.add(1, -100, -60, -100);
-// 		transform.add(2, -100, -60, 100);
-// 		transform.add(3, 100, -60, 100);
-// 		transform.add(4, 100, -60, -100);
-		
-		Vec[] vertices = {
-				new Vec(WIDTH * 0.25f, HEIGHT * 0.25f, 0),
-				new Vec(WIDTH * 0.25f, HEIGHT * 0.75f, 0),
-				new Vec(WIDTH * 0.75f, HEIGHT * 0.25f, 0),
-				new Vec(WIDTH * 0.75f, HEIGHT * 0.75f, 0)
+		Vec3d[] vertices = {
+				new Vec3d(0, 0, 0),
+				new Vec3d(0, 0, 1),
+				new Vec3d(0, 1, 0),
+				new Vec3d(0, 1, 1),
+				new Vec3d(1, 0, 0),
+				new Vec3d(1, 0, 1),
+				new Vec3d(1, 1, 0),
+				new Vec3d(1, 1, 1)
 		};
 		
-		int[] indexBuffer = { 0, 1, 2, 2, 1, 3 };
+		int[] indexBuffer = { 0, 2, 6,
+							  0, 6, 4,
+							  4, 6, 7,
+							  4, 7, 5,
+							  5, 7, 3,
+							  5, 3, 1,
+							  1, 3, 2,
+							  1, 2, 0,
+							  2, 3, 7,
+							  2, 7, 6,
+							  5, 1, 0,
+							  5, 0, 4 };
 		
-		quad = new Model(vertices, indexBuffer);
+		cube = new Model(vertices, indexBuffer);
 		
 		if (musicOn) {
 			player = new Player();
@@ -81,12 +82,7 @@ public class Engine {
 	 * Update is where you draw things. It is run before the pixels are rendered onto the screen.
 	 */
 	private void update() {
-// 		theta += velocity / 100.0;
-// 		transform.setMatrix(theta);
-// 		transform.transformVecs();
-// 		transform.paintVectors(screen);
-
-		screen.drawModel(quad);
+		screen.drawModel(cube);
 	}
 	
 	/**
