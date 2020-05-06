@@ -26,6 +26,13 @@ public class Vec3d {
 		return (float) Math.sqrt(x*x + y*y + z*z);
 	}
 	
+	public void normalize() {
+		float mag = this.magnitude();
+		this.x /= mag;
+		this.y /= mag;
+		this.z /= mag;
+	}
+	
 	public void add(float scalar) {
 		this.x += scalar;
 		this.y += scalar;
@@ -42,13 +49,6 @@ public class Vec3d {
 		this.x *= scalar;
 		this.y *= scalar;
 		this.z *= scalar;
-	}
-	
-	public void normalize(Vec3d v, float scalar) {
-		float mag = v.magnitude();
-		this.x /= mag;
-		this.y /= mag;
-		this.z /= mag;
 	}
 	
 	@Override

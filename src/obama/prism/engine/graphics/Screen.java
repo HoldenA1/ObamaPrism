@@ -29,6 +29,7 @@ public class Screen extends Canvas {
 	private Mat4x4 projMat, rotXMat, rotZMat;
 	private float theta, elapsedTime;
 	private double prevTime;
+	private Vec3d camera;
 	
 	private long lastTime;
 	
@@ -60,6 +61,8 @@ public class Screen extends Canvas {
 		rotZMat = new Mat4x4();
 		theta = 0;
 		prevTime = System.currentTimeMillis();
+		
+		camera = new Vec3d(0, 0, 0);
 		
 		// For frame rate counter
 		lastTime = System.nanoTime();
@@ -102,6 +105,7 @@ public class Screen extends Canvas {
 		rotZMat.mat = SpecialMatrices.createRotationZMatrix(theta);
 		
 		for (int triangle = 0; triangle < indexBuffer.length / 3; triangle++) {
+			Vec3d[] triTranslated = new Vec3d[3];
 			Vec3d[] triProjected = new Vec3d[3];
 			for (int p = 0; p < 3; p++) {
 				// Rotate triangle
@@ -110,20 +114,34 @@ public class Screen extends Canvas {
 				translated = Maths.multMatVec(rotZMat, translated);
 				// Translate triangle backwards
 				translated.z += 3.0f;
-				// Project into 2d space
-				triProjected[p] = Maths.multMatVec(projMat, translated);
-				// Scale into view
-				triProjected[p].add(1.0f);
-				triProjected[p].x *= 0.5f * (width-1);
-				triProjected[p].y *= 0.5f * (height-1);
+				
+				triTranslated[p] = translated;
 			}
 			
-			triangleDrawer.draw(
-					triProjected[0],
-					triProjected[1],
-					triProjected[2],
-					Color.white
-			);
+			// Calculate normal
+			Vec3d normal, line1, line2;
+			line1 = Maths.sub(triTranslated[1], triTranslated[0]);
+			line2 = Maths.sub(triTranslated[2], triTranslated[0]);
+			normal = Maths.crossProduct(line1, line2);
+			normal.normalize();
+			
+			if (Maths.dotProduct(normal, Maths.sub(triTranslated[0], camera)) < 0.0f) {
+				for (int p = 0; p < 3; p++) {
+					// Project into 2d space
+					triProjected[p] = Maths.multMatVec(projMat, triTranslated[p]);
+					// Scale into view
+					triProjected[p].add(1.0f);
+					triProjected[p].x *= 0.5f * (width-1);
+					triProjected[p].y *= 0.5f * (height-1);
+				}
+				
+				triangleDrawer.draw(
+						triProjected[0],
+						triProjected[1],
+						triProjected[2],
+						Color.white
+				);
+			}
 		}
 	}
 	
