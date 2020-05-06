@@ -1,5 +1,8 @@
 package obama.prism.engine;
 
+import java.awt.Color;
+import java.awt.Point;
+
 import obama.prism.engine.graphics.Screen;
 import obama.prism.engine.graphics.Window;
 import obama.prism.engine.graphics3d.Model;

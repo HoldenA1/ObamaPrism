@@ -1,8 +1,15 @@
 package obama.prism.engine.graphics;
 
 import java.awt.Color;
-import obama.prism.engine.graphics3d.Vec3d;
+import java.awt.Point;
 
+/**
+ * TriangleDrawer handles the drawing of triangles on the Screen.
+ * This is an implementation comes from this website.
+ * <a href="http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html">link</a>
+ * NOTE: This code is missing edge cases and double renders some parts. For optimization, handle the edge cases
+ * @author holden
+ */
 public class TriangleDrawer {
 	
 	private Screen screen;
@@ -11,109 +18,69 @@ public class TriangleDrawer {
 		this.screen = screen;
 	}
 	
-	public void draw(Vec3d v0, Vec3d v1, Vec3d v2, Color color) {
-		int p0x = (int)v0.x, p0y = (int)v0.y;
-		int p1x = (int)v1.x, p1y = (int)v1.y;
-		int p2x = (int)v2.x, p2y = (int)v2.y;
-		
-		screen.drawLine(p0x, p0y, p1x, p1y, color);
-		screen.drawLine(p1x, p1y, p2x, p2y, color);
-		screen.drawLine(p2x, p2y, p0x, p0y, color);
+	public void draw(Point p0, Point p1, Point p2, Color color) {
+		screen.drawLine(p0.x, p0.y, p1.x, p1.y, color);
+		screen.drawLine(p1.x, p1.y, p2.x, p2.y, color);
+		screen.drawLine(p2.x, p2.y, p0.x, p0.y, color);
 	}
 	
-//	public void fill(Vec3d v0, Vec3d v1, Vec3d v2, Color color) {
-//		// Sort vertices
-//		if (v1.y < v0.y) swap(v0, v1);
-//		if (v2.y < v1.y) swap(v1, v2);
-//		if (v1.y < v0.y) swap(v0, v1);
-//		
-//		// Find out what type of triangle it is
-//		if (v0.y == v1.y) {
-//			// Flat top triangle
-//			if (v1.x < v0.x) swap(v0, v1);
-//			drawFlatTopTriangle(v0, v1, v2, color);
-//		} else if (v1.y == v2.y) {
-//			// Flat bottom triangle
-//			if (v2.x < v1.x) swap(v1, v2);
-//			drawFlatBottomTriangle(v0, v1, v2, color);
-//		} else {
-//			// General triangle
-//			// Find splitting Vec
-//			float alphaSplit = 
-//					(v1.y - v0.y) /
-//					(v2.y - v0.y);
-//			Vec3d vSplit = v2.sub(v0).mult(alphaSplit).add(v2);
-//			
-//			if (v1.x < vSplit.x) {
-//				// Major right
-//				drawFlatBottomTriangle(v0, v1, vSplit, color);
-//				drawFlatTopTriangle(v1, vSplit, v2, color);
-//			} else {
-//				// Major left
-//				drawFlatBottomTriangle(v0, vSplit, v1, color);
-//				drawFlatTopTriangle(vSplit, v1, v2, color);
-//			}
-//		}
-//	}
-//	
-//	private void drawFlatTopTriangle(Vec3d v0, Vec3d v1, Vec3d v2, Color color) {
-//		// Calculate slopes in screen space
-//		float m0 = (v2.x - v0.x) / (v2.y - v0.y);
-//		float m1 = (v2.x - v1.x) / (v2.y - v1.y);
-//		
-//		// Calculate start and end of scanlines
-//		int yStart = Math.round(v0.y - 0.5f);
-//		int yEnd = Math.round(v2.y - 0.5f);
-//		
-//		for (int y = yStart; y < yEnd; y++) {
-//			// Calculate start and end points
-//			float px0 = m0 * (y + 0.5f - v0.y) + v0.x;
-//			float px1 = m1 * (y + 0.5f - v1.y) + v1.x;
-//			
-//			// Calculate start and end pixels
-//			int xStart = Math.round(px0 - 0.5f);
-//			int xEnd = Math.round(px1 - 0.5f);
-//			
-//			for (int x = xStart; x < xEnd; x++) {
-//				screen.setPixel(x, y, color.getRGB());
-//			}
-//		}
-//	}
-//	
-//	private void drawFlatBottomTriangle(Vec3d v0, Vec3d v1, Vec3d v2, Color color) {
-//		// Calculate slopes in screen space
-//		float m0 = (v1.x - v0.x) / (v1.y - v0.y);
-//		float m1 = (v2.x - v0.x) / (v2.y - v0.y);
-//		
-//		// Calculate start and end of scanlines
-//		int yStart = Math.round(v0.y - 0.5f);
-//		int yEnd = Math.round(v2.y - 0.5f);
-//		
-//		for (int y = yStart; y < yEnd; y++) {
-//			// Calculate start and end points
-//			float px0 = m0 * (y + 0.5f - v0.y) + v0.x;
-//			float px1 = m1 * (y + 0.5f - v0.y) + v0.x;
-//			
-//			// Calculate start and end pixels
-//			int xStart = Math.round(px0 - 0.5f);
-//			int xEnd = Math.round(px1 - 0.5f);
-//			
-//			for (int x = xStart; x < xEnd; x++) {
-//				screen.setPixel(x, y, color.getRGB());
-//			}
-//		}
-//	}
-//	
-//	private void swap(Vec3d v0, Vec3d v1) {
-//		float tempX = v0.x;
-//		float tempY = v0.y;
-//		float tempZ = v0.z;
-//		v0.x = v1.x;
-//		v0.y = v1.y;
-//		v0.z = v1.z;
-//		v1.x = tempX;
-//		v1.y = tempY;
-//		v1.z = tempZ;
-//	}
+	public void fill(Point p0, Point p1, Point p2, Color color) {
+		// Sort vertices
+		if (p1.y < p0.y) swap(p0, p1);
+		if (p2.y < p1.y) swap(p1, p2);
+		if (p1.y < p0.y) swap(p0, p1);
+
+		/* here we know that p0.y <= p1.y <= p2.y */
+		if (p1.y == p2.y) {
+			/* check for trivial case of bottom-flat triangle */
+			fillBottomFlatTriangle(p0, p1, p2, color);
+		} else if (p0.y == p1.y) {
+			/* check for trivial case of top-flat triangle */
+			fillTopFlatTriangle(p0, p1, p2, color);
+		} else {
+			/* general case - split the triangle in a topflat and bottom-flat one */
+			Point pSplit = new Point((int)(p0.x + ((float)(p1.y - p0.y) / (float)(p2.y - p0.y)) * (p2.x - p0.x)), p1.y);
+			fillBottomFlatTriangle(p0, p1, pSplit, color);
+			fillTopFlatTriangle(p1, pSplit, p2, color);
+		}
+	}
+	
+	private void fillBottomFlatTriangle(Point p0, Point p1, Point p2, Color color) {
+		float invslope1 , invslope2;
+		invslope1 = (float)(p1.x - p0.x) / (float)(p1.y - p0.y);
+		invslope2 = (float)(p2.x - p0.x) / (float)(p2.y - p0.y);
+
+		float curx1 = p0.x;
+		float curx2 = p0.x;
+
+		for (int scanlineY = p0.y; scanlineY <= p1.y; scanlineY++) {
+			screen.drawLine((int)curx1, scanlineY, (int)curx2, scanlineY, color);
+			curx1 += invslope1;
+			curx2 += invslope2;
+		}
+	 }
+	
+	private void fillTopFlatTriangle(Point p0, Point p1, Point p2, Color color) {
+		float invslope1 = (float)(p2.x - p0.x) / (float)(p2.y - p0.y);
+		float invslope2 = (float)(p2.x - p1.x) / (float)(p2.y - p1.y);
+		
+		float curx1 = p2.x;
+		float curx2 = p2.x;
+		
+		for (int scanlineY = p2.y; scanlineY > p0.y; scanlineY--) {
+			screen.drawLine((int)curx1, scanlineY, (int)curx2, scanlineY, color);
+			curx1 -= invslope1;
+			curx2 -= invslope2;
+		}
+	}
+	
+	private void swap(Point p0, Point p1) {
+		int tempX = p0.x;
+		int tempY = p0.y;
+		p0.x = p1.x;
+		p0.y = p1.y;
+		p1.x = tempX;
+		p1.y = tempY;
+	}
 
 }

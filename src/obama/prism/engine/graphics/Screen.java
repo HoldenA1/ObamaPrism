@@ -80,13 +80,13 @@ public class Screen extends Canvas {
 		lineDrawer.drawLine(x0, y0, x1, y1, color0, color1);
 	}
 	
-	public void drawTriangle(Vec3d v0, Vec3d v1, Vec3d v2, Color color) {
-		triangleDrawer.draw(v0, v1, v2, color);
+	public void drawTriangle(Point p0, Point p1, Point p2, Color color) {
+		triangleDrawer.draw(p0, p1, p2, color);
 	}
 	
-//	public void fillTriangle(Vec3d v0, Vec3d v1, Vec3d v2, Color color) {
-//		triangleDrawer.fill(v0, v1, v2, color);
-//	}
+	public void fillTriangle(Point p0, Point p1, Point p2, Color color) {
+		triangleDrawer.fill(p0, p1, p2, color);
+	}
 	
 	public void drawModel(Model model) {
 		Vec3d[] vertices = model.getVertices();
@@ -107,6 +107,7 @@ public class Screen extends Canvas {
 		for (int triangle = 0; triangle < indexBuffer.length / 3; triangle++) {
 			Vec3d[] triTranslated = new Vec3d[3];
 			Vec3d[] triProjected = new Vec3d[3];
+			Point[] finalTri = new Point[3];
 			for (int p = 0; p < 3; p++) {
 				// Rotate triangle
 				Vec3d translated = Vec3d.copy(vertices[indexBuffer[triangle*3 + p]]);
@@ -125,6 +126,7 @@ public class Screen extends Canvas {
 			normal = Maths.crossProduct(line1, line2);
 			normal.normalize();
 			
+			// Cull the covered faces
 			if (Maths.dotProduct(normal, Maths.sub(triTranslated[0], camera)) < 0.0f) {
 				for (int p = 0; p < 3; p++) {
 					// Project into 2d space
@@ -133,12 +135,13 @@ public class Screen extends Canvas {
 					triProjected[p].add(1.0f);
 					triProjected[p].x *= 0.5f * (width-1);
 					triProjected[p].y *= 0.5f * (height-1);
+					finalTri[p] = new Point((int)triProjected[p].x, (int)triProjected[p].y);
 				}
-				
-				triangleDrawer.draw(
-						triProjected[0],
-						triProjected[1],
-						triProjected[2],
+				// Draw triangle
+				triangleDrawer.fill(
+						finalTri[0],
+						finalTri[1],
+						finalTri[2],
 						Color.white
 				);
 			}
