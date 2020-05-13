@@ -114,7 +114,7 @@ public class Screen extends Canvas {
 				translated = Maths.multMatVec(rotXMat, translated);
 				translated = Maths.multMatVec(rotZMat, translated);
 				// Translate triangle backwards
-				translated.z += 3.0f;
+				translated.z += 3;
 				
 				triTranslated[p] = translated;
 			}
@@ -127,12 +127,18 @@ public class Screen extends Canvas {
 			normal.normalize();
 			
 			// Cull the covered faces
-			if (Maths.dotProduct(normal, Maths.sub(triTranslated[0], camera)) < 0.0f) {
+			if (Maths.dotProduct(normal, Maths.sub(triTranslated[0], camera)) < 0) {
+				// Illumination
+				Vec3d lightDir = new Vec3d(0, 0, -1);
+				lightDir.normalize();
+				float dp = Math.abs(Maths.dotProduct(normal, lightDir));
+				Color triColor = new Color(dp, dp, dp);
+				
 				for (int p = 0; p < 3; p++) {
 					// Project into 2d space
 					triProjected[p] = Maths.multMatVec(projMat, triTranslated[p]);
 					// Scale into view
-					triProjected[p].add(1.0f);
+					triProjected[p].add(1);
 					triProjected[p].x *= 0.5f * (width-1);
 					triProjected[p].y *= 0.5f * (height-1);
 					finalTri[p] = new Point((int)triProjected[p].x, (int)triProjected[p].y);
@@ -142,8 +148,15 @@ public class Screen extends Canvas {
 						finalTri[0],
 						finalTri[1],
 						finalTri[2],
-						Color.white
+						triColor
 				);
+				// Draw wire frame
+//				triangleDrawer.draw(
+//						finalTri[0],
+//						finalTri[1],
+//						finalTri[2],
+//						Color.black
+//				);
 			}
 		}
 	}

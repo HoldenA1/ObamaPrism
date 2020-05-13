@@ -1,13 +1,9 @@
 package obama.prism.engine;
 
-import java.awt.Color;
-import java.awt.Point;
-
-import obama.prism.engine.graphics.Screen;
-import obama.prism.engine.graphics.Window;
-import obama.prism.engine.graphics3d.Model;
-import obama.prism.engine.graphics3d.Vec3d;
+import obama.prism.engine.graphics.*;
+import obama.prism.engine.graphics3d.*;
 import obama.prism.engine.sound.Player;
+import obama.prism.engine.util.Reader;
 
 /**
  * Engine contains the central logic for the rendering engine
@@ -32,31 +28,7 @@ public class Engine {
 		screen = new Screen(WIDTH, HEIGHT);
 		frame.add(screen);
 		
-		Vec3d[] vertices = {
-				new Vec3d(0, 0, 0),
-				new Vec3d(0, 0, 1),
-				new Vec3d(0, 1, 0),
-				new Vec3d(0, 1, 1),
-				new Vec3d(1, 0, 0),
-				new Vec3d(1, 0, 1),
-				new Vec3d(1, 1, 0),
-				new Vec3d(1, 1, 1)
-		};
-		
-		int[] indexBuffer = { 0, 2, 6,
-							  0, 6, 4,
-							  4, 6, 7,
-							  4, 7, 5,
-							  5, 7, 3,
-							  5, 3, 1,
-							  1, 3, 2,
-							  1, 2, 0,
-							  2, 3, 7,
-							  2, 7, 6,
-							  5, 1, 0,
-							  5, 0, 4 };
-		
-		cube = new Model(vertices, indexBuffer);
+		cube = Reader.readModelFromObj("/models/cube.obj");
 		
 		if (musicOn) {
 			player = new Player();
