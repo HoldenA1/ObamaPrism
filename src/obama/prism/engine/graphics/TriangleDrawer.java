@@ -33,42 +33,57 @@ public class TriangleDrawer {
 		/* here we know that p0.y <= p1.y <= p2.y */
 		if (p1.y == p2.y) {
 			/* check for trivial case of bottom-flat triangle */
-			fillBottomFlatTriangle(p0, p1, p2, color);
+			fillFlatBottomTriangle(p0, p1, p2, color);
 		} else if (p0.y == p1.y) {
 			/* check for trivial case of top-flat triangle */
-			fillTopFlatTriangle(p0, p1, p2, color);
+			fillFlatTopTriangle(p0, p1, p2, color);
 		} else {
 			/* general case - split the triangle in a topflat and bottom-flat one */
 			Point pSplit = new Point((int)(p0.x + ((float)(p1.y - p0.y) / (float)(p2.y - p0.y)) * (p2.x - p0.x)), p1.y);
-			fillBottomFlatTriangle(p0, p1, pSplit, color);
-			fillTopFlatTriangle(p1, pSplit, p2, color);
+			fillFlatBottomTriangle(p0, p1, pSplit, color);
+			fillFlatTopTriangle(p1, pSplit, p2, color);
 		}
 	}
 	
-	private void fillBottomFlatTriangle(Point p0, Point p1, Point p2, Color color) {
-		float invslope1 , invslope2;
-		invslope1 = (float)(p1.x - p0.x) / (float)(p1.y - p0.y);
-		invslope2 = (float)(p2.x - p0.x) / (float)(p2.y - p0.y);
+	private void fillFlatBottomTriangle(Point p0, Point p1, Point p2, Color color) {
+		float invslope1 = (float)(p1.x - p0.x) / (float)(p1.y - p0.y);
+		float invslope2 = (float)(p2.x - p0.x) / (float)(p2.y - p0.y);
+		
+		if (invslope2 < invslope1) {
+			float temp = invslope1;
+			invslope1 = invslope2;
+			invslope2 = temp;
+		}
 
 		float curx1 = p0.x;
 		float curx2 = p0.x;
 
 		for (int scanlineY = p0.y; scanlineY <= p1.y; scanlineY++) {
-			screen.drawLine((int)curx1, scanlineY, (int)curx2, scanlineY, color);
+			for (int x = (int)curx1; x <= (int)curx2; x++) {
+				screen.setPixel(x, scanlineY, color.getRGB());
+			}
 			curx1 += invslope1;
 			curx2 += invslope2;
 		}
 	 }
 	
-	private void fillTopFlatTriangle(Point p0, Point p1, Point p2, Color color) {
+	private void fillFlatTopTriangle(Point p0, Point p1, Point p2, Color color) {
 		float invslope1 = (float)(p2.x - p0.x) / (float)(p2.y - p0.y);
 		float invslope2 = (float)(p2.x - p1.x) / (float)(p2.y - p1.y);
+		
+		if (invslope2 > invslope1) {
+			float temp = invslope1;
+			invslope1 = invslope2;
+			invslope2 = temp;
+		}
 		
 		float curx1 = p2.x;
 		float curx2 = p2.x;
 		
 		for (int scanlineY = p2.y; scanlineY > p0.y; scanlineY--) {
-			screen.drawLine((int)curx1, scanlineY, (int)curx2, scanlineY, color);
+			for (int x = (int)curx1; x <= (int)curx2; x++) {
+				screen.setPixel(x, scanlineY, color.getRGB());
+			}
 			curx1 -= invslope1;
 			curx2 -= invslope2;
 		}
